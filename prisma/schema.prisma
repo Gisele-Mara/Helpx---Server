@@ -15,14 +15,14 @@ datasource db {
 
 model alergias {
   cod_alergias   Int           @id @default(autoincrement())
-  alergias       String        @db.VarChar(60)
+  alergias       String        @unique@db.VarChar(60)
   fk_cod_usuario  usuario[] 
 
 }
 
 model comorbidade {
   cod_comorbidade Int     @id @default(autoincrement())
-  comorbidade     String  @db.VarChar(60)
+  comorbidade     String  @unique@db.VarChar(60)
   fk_cod_usuario  usuario[] 
 }
 
@@ -75,7 +75,7 @@ model tratamento {
 
 model usuario {
   cod_usuario       String              @id @default(uuid())
-  nome              String              @db.VarChar(40)
+  nome              String?              @db.VarChar(40)
   tiposanguineo     String?             @db.VarChar(10)
   idade             Int?
   email             String?             @unique @db.VarChar(40)

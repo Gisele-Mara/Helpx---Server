@@ -1,12 +1,16 @@
-import app from ".";
+import app from "./index.js";
 import { PrismaClient} from "@prisma/client";
+import { findAllUsers, findUser } from "./PrismaQuery/find.js";
+import { createUser } from "./PrismaQuery/create.js";
+import {update} from "./PrismaQuery/update.js"
 
 const prisma = new PrismaClient()
 
 
 app.get('/users/', async (req,res) =>{
     try {
-        const users = await prisma.usuario.findMany()
+       
+        const users = await findAllUsers()
         res.status(200).json(users)
     } catch (err) {
         return res.status(500).send(err.message)
@@ -19,8 +23,37 @@ app.get('/users/:id', async (req,res) =>{
     try {
         const { id } = req.params.id
 
-        const user = await prisma.usuario.findUnique({where: { cod_usuario: (id)}})
-        // const user = await prisma.cliente.findMany()
+        const user = await findUser(id)
+
+        res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).send(error.message)
+    }
+    
+})
+app.get('/users/login', async (req,res) =>{
+    try {
+        const { email, senha } = req.body
+
+        const user = await findUser(email)
+
+        if(email.includes('admin') && (senha == user.senha)){
+            return res.status(200).json({flagAdm: true})
+        }
+      
+        if(!user.email || !user.senha){
+            return res.status(422).json({message: "Prencha todos os campos!"})
+        }
+
+        if(!user.email){
+            return res.status(404).json({message: "Email não registrado"})
+        }
+
+        if(user.senha !== senha){
+            return res.status(403).json({message: "Senha inválida"})
+        }
+
+
         res.status(200).json(user)
     } catch (error) {
         return res.status(500).send(error.message)
@@ -28,105 +61,76 @@ app.get('/users/:id', async (req,res) =>{
     
 })
 
+app.get('/users/logged/:id', async (req,res) =>{
+    try {
+        const { id } = req.params.id
 
-//Criando registro (novo cliente)
-app.post('/users/sign', async (req,res) =>{
-    try{
-        // const { user } = await prisma.cliente.create(req.body)
-        // res.status(201).json(user);
-    const { nomeusuario, tiposanguineo, idadeusuairo,emailusuario,senhausuario
-        ,alergias,logradourousuario,numerocasausuario,ncepusuario,
-        nomecontatoemergencia,emailcontatoemergencia,telefoneemergencia,
-        doadorsangue,doadororgao,comorbidade,telefoneusuario } = req.body
-
-      const result = await prisma.usuario.create({
-//       data: {
-//         nomeusuario,
-//         tiposanguineo,
-//         idadeusuairo,
-//         emailusuario,
-//         senhausuario,
-
-//         possuialergias:{
-//             create:{
-//                 alergias: {
-//                     connect: {
-//                         alergias
-//                             }
-             
-//                         }
-//                 }
-//          },
-//         enderecousuario:{
-//             create:{
-//                 logradourousuario,
-//                 numerocasausuario,
-//                 ncepusuario
-
-//             }
-//         },
-//         contatoemergencia:{
-//             create:{
-//                 nomecontatoemergencia,
-//                 emailcontatoemergencia   ,         
-//                 telefoneemergencia
-//             }
-//         },
-//         doadorsangue: {
-//             create: {
-//              doadorsangue
-// }
-//         },
-//         doadororgao: {
-//             create: {
-//                 doadororgao
-//             }
-//         },
-//         comorbidade:{
-//             create:{
-//                 comorbidade
-//             }
-//         },
-//         telusuario: {
-//             create: {
-//                 telefoneusuario
-//             }
-//         }
-
+        const user = await findUser(id)
+        // const user = await prisma.cliente.findMany()
+        res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).send(error.message)
+    }
     
-//     },
-        data:req.body
-      
-    })
-    // res.json(result)
-    res.status(201).json(result);
+})
+app.post("/cadastro", async (req,res) =>{
+   
+    try {
+        const { email, senha } = req.body
 
-    } catch (error){
-        res.status(500).send(error.message)
+        const checkEmail = await findUser(email)
+
+        if(checkEmail){
+            return res.status(409).json({message: "Email já cadastrado. Tente outro."})
+        }
+
+        const user = await createUser(req.body)
+
+        return res.status(200).json(user)
+    } catch (error) {
+       
+        return res.status(500).send(error.message)
+    }
+    
+})
+
+
+
+
+app.put("/users/update/:id", async (req,res) =>{
+   
+    try {
+        const { id } = req.params.id
+        const{
+            nome,
+            idade,
+            alergia,
+            comorbidade,
+            tipoSanguineo,
+            doadorSangue,
+            telefone,
+            nomeEmergencia,
+            emailEmergencia,
+            telefoneEmergencia,
+            cep,
+            logradouro,
+            nCasa,
+            email,
+            senha,
+            doadorOrgao,
+        } = req.body
+       
+        const user = await update(req.body)
+      
+        res.status(200).json(user)
+    } catch (error) {
+        return res.status(500).send(error.message)
     }
 
 })
 
-//Atualização parcial, ainda não consegui
-app.put('users/:id', async (req,res) =>{
- try {
-    const {id} = req.params
-    const { cpf } = req.body
 
-    const user = await prisma.usuario.update({
-        where: {id : (id)},
-        data: {    
-            cpf
-        }
-    })
 
-    res.status(200).json(user);
- } catch (error) {
-    res.status(500).send(error.message)
- }
-
-})
-// Deletar usuario
 app.delete(`/users/delete/:id`, async (req, res) => {
     try{
 

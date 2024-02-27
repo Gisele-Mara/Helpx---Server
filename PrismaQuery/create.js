@@ -28,7 +28,7 @@ const vetorUser = [
         id: 2,
         nome: "Andrey",
         idade: 25,
-        alergia: "Amendoim",
+        alergia: "Frutos do Mar",
         tipoSanguineo: "B-",
         doadorSangue: "Não",
         telefone: "(22) 9876-5432",
@@ -37,11 +37,11 @@ const vetorUser = [
         cep: "54321-876",
         logradouro: "Avenida Principal",
         nCasa: 567,
-        email: "andrey",
+        email: "andrey@",
         senha: "123",
         doadorOrgao: "Não",
         emailEmergencia: "pedro@example.com",
-        comorbidade: "Asma"
+        comorbidade: "Diabetes"
     },
     {
         id: 3,
@@ -159,8 +159,7 @@ const vetorUser = [
     }
 ]
 
-
-async function createMany(body){
+ export async function createUser(body){
 
     try {
         const{
@@ -244,13 +243,14 @@ async function createMany(body){
     
         })
         console.log("Usuario criado", user)
+        return user
         
     } catch (error) {
         throw new Error ("Internal server error" + error)
     }
 
 }
-for(let user of vetorUser){
-    createMany(user)
-}
-// createMany(...vetorUser)
+// for(let user of vetorUser){
+//     createUser(user)
+// }
+
