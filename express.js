@@ -7,6 +7,17 @@ import {update} from "./PrismaQuery/update.js"
 const prisma = new PrismaClient()
 
 
+app.get('/',  () =>{
+    try {
+       
+      
+        res.status(200).json({message: "Oi, cara de boi"})
+    } catch (err) {
+        return res.status(500).send(err.message)
+    }
+    
+})
+
 app.get('/users/', async (req,res) =>{
     try {
        
