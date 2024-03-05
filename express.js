@@ -1,8 +1,8 @@
-import app from "./index.js";
+import app from "./src/api.js";
 import { PrismaClient} from "@prisma/client";
-import { findAllUsers, findUser } from "./PrismaQuery/find.js";
-import { createUser } from "./PrismaQuery/create.js";
-import {update} from "./PrismaQuery/update.js"
+import { findAllUsers, findUser } from "./src/PrismaQuery/find.js";
+import { createUser } from "./src/PrismaQuery/create.js";
+import {update} from "./src/PrismaQuery/update.js"
 
 const prisma = new PrismaClient()
 
