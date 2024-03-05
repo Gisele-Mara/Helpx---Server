@@ -1,7 +1,6 @@
 import express from "express"
 import cors from "cors"
-
-const serverless = require ("serverless-http")
+import ServerlessHttp from "serverless-http"
 
 
 
