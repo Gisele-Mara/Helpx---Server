@@ -2,7 +2,7 @@ import express from "express"
 import cors from "cors"
 import ServerlessHttp from "serverless-http"
 
-
+const serverless = ServerlessHttp()
 
 export const app = express()
 const router = express.Router()
