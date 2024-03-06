@@ -1,4 +1,4 @@
-import app from "./src/api.js";
+import app from "./index.js"
 import { PrismaClient} from "@prisma/client";
 import { findAllUsers, findUser } from "./src/PrismaQuery/find.js";
 import { createUser } from "./src/PrismaQuery/create.js";
@@ -7,7 +7,7 @@ import {update} from "./src/PrismaQuery/update.js"
 const prisma = new PrismaClient()
 
 
-app.get('/',  () =>{
+app.get('/',  (req,res) =>{
     try {
        
       
@@ -42,7 +42,7 @@ app.get('/users/:id', async (req,res) =>{
     }
     
 })
-app.get('/users/login', async (req,res) =>{
+app.post('/users/login', async (req,res) =>{
     try {
         const { email, senha } = req.body
 
@@ -52,7 +52,7 @@ app.get('/users/login', async (req,res) =>{
             return res.status(200).json({flagAdm: true})
         }
       
-        if(!user.email || !user.senha){
+        if(!email || !senha){
             return res.status(422).json({message: "Prencha todos os campos!"})
         }
 
@@ -64,10 +64,17 @@ app.get('/users/login', async (req,res) =>{
             return res.status(403).json({message: "Senha inválida"})
         }
 
+        if(!user.nome){
 
-        res.status(200).json(user)
+            res.status(200).json({user, flagAdm: "newUser"})
+        }
+
+        res.status(200).json({user, flagAdm: false})
+
     } catch (error) {
-        return res.status(500).send(error.message)
+
+        console.log(error.message)
+        return res.status(500).send("Internal server error")
     }
     
 })
@@ -99,8 +106,8 @@ app.post("/cadastro", async (req,res) =>{
 
         return res.status(200).json(user)
     } catch (error) {
-       
-        return res.status(500).send(error.message)
+       console.log(error.message)
+        return res.status(500).send("Internal server error")
     }
     
 })
@@ -159,4 +166,3 @@ app.delete(`/users/delete/:id`, async (req, res) => {
  }
    
   })
-

@@ -4,7 +4,8 @@ import { PrismaClient} from "@prisma/client";
 const prisma = new PrismaClient()
 
 export async function findUser(body){
-    const {email} = body
+  
+    let email = body
 
     const user = await prisma.usuario.findUnique({
         where: {
@@ -21,8 +22,11 @@ export async function findUser(body){
             tratamento: true 
         }
     })
+    console.log("user prisma", user)
+    
     return user
 }
+
 export const findAllUsers = async()=>{
 
     const users = await prisma.usuario.findMany()

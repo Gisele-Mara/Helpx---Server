@@ -16,14 +16,14 @@ datasource db {
 model alergias {
   cod_alergias   Int           @id @default(autoincrement())
   alergias       String        @unique@db.VarChar(60)
-  fk_cod_usuario  usuario[] 
+  fk_cod_usuario  usuario[]
 
 }
 
 model comorbidade {
   cod_comorbidade Int     @id @default(autoincrement())
   comorbidade     String  @unique@db.VarChar(60)
-  fk_cod_usuario  usuario[] 
+  fk_cod_usuario  usuario[]
 }
 
 model contatoemergencia {
@@ -31,21 +31,21 @@ model contatoemergencia {
   nomecontatoemergencia  String? @db.VarChar(40)
   emailcontatoemergencia String? @db.VarChar(60)
   telefoneemergencia     String? @db.VarChar(40)
-  fk_cod_usuario         String
+  fk_cod_usuario         String  @unique
   usuario                usuario @relation(fields: [fk_cod_usuario], references: [cod_usuario], onDelete: Cascade)
 }
 
 model doadororgao {
   cod_doadororgao Int     @id @default(autoincrement())
   doadororgao     String? @db.VarChar(20)
-  fk_cod_usuario  String
+  fk_cod_usuario  String  @unique
   usuario         usuario @relation(fields: [fk_cod_usuario], references: [cod_usuario], onDelete: Cascade)
 }
 
 model doadorsangue {
   cod_doadorsangue Int     @id @default(autoincrement())
   doadorsangue     String? @db.VarChar(20)
-  fk_cod_usuario   String
+  fk_cod_usuario   String   @unique
   usuario          usuario @relation(fields: [fk_cod_usuario], references: [cod_usuario], onDelete: Cascade)
 }
 
@@ -74,16 +74,16 @@ model tratamento {
 }
 
 model usuario {
-  cod_usuario       String              @id @default(uuid())
+  cod_usuario       String              @id @unique @default(uuid())
   nome              String?              @db.VarChar(40)
   tiposanguineo     String?             @db.VarChar(10)
   idade             Int?
-  email             String?             @unique @db.VarChar(40)
-  senha             String?             @db.VarChar(40)
+  email             String             @unique @db.VarChar(40)
+  senha             String            @db.VarChar(40)
   comorbidade       comorbidade[]
-  contatoemergencia contatoemergencia[]
-  doadororgao       doadororgao[]
-  doadorsangue      doadorsangue[]
+  contatoemergencia contatoemergencia?
+  doadororgao       doadororgao?
+  doadorsangue      doadorsangue?
   endereco          endereco?
   alergia           alergias[]
   telefone          telefone?
