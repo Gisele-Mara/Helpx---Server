@@ -1,6 +1,6 @@
 import app from "./index.js"
 import { PrismaClient} from "@prisma/client";
-import { findAllUsers, findUser } from "./src/PrismaQuery/find.js";
+import { findAllUsers, findUser, findUserById } from "./src/PrismaQuery/find.js";
 import { createUser } from "./src/PrismaQuery/create.js";
 import {update} from "./src/PrismaQuery/update.js"
 
@@ -81,10 +81,10 @@ app.post('/users/login', async (req,res) =>{
 
 app.get('/users/logged/:id', async (req,res) =>{
     try {
-        const { id } = req.params.id
+        const id = req.params.id
 
-        const user = await findUser(id)
-        // const user = await prisma.cliente.findMany()
+        const user = await findUserById(id)
+        console.log("User logged result", user)
         res.status(200).json(user)
     } catch (error) {
         return res.status(500).send(error.message)
@@ -118,7 +118,7 @@ app.post("/cadastro", async (req,res) =>{
 app.put("/users/update/:id", async (req,res) =>{
    
     try {
-        const { id } = req.params.id
+        const  id  = req.params.id
         const{
             nome,
             idade,
@@ -138,8 +138,8 @@ app.put("/users/update/:id", async (req,res) =>{
             doadorOrgao,
         } = req.body
        
-        const user = await update(req.body)
-      
+        const user = await update(id, req.body)
+        console.log("oii", user)
         res.status(200).json(user)
     } catch (error) {
         return res.status(500).send(error.message)

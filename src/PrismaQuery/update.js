@@ -3,7 +3,7 @@ import { PrismaClient} from "@prisma/client";
 
 const prisma = new PrismaClient()
 
-export async function update(body){
+export async function update(id, body){
    
     try {
         const{
@@ -26,6 +26,9 @@ export async function update(body){
         } = body
     
         const userUpdate = await prisma.usuario.update({
+            where: {
+                cod_usuario: id
+            },
             data: {
                 nome: nome || undefined,
                 idade: idade || undefined,
@@ -45,17 +48,17 @@ export async function update(body){
                     }
                 },
                 doadororgao: {
-                    create: {
+                    update: {
                         doadororgao: doadorOrgao || undefined
                     }
                 },
                 doadorsangue: {
-                    create: {
+                    update: {
                         doadorsangue: doadorSangue || undefined
                     }
                 },
                 contatoemergencia: {
-                    create: {
+                    update: {
                         nomecontatoemergencia: nomeEmergencia || undefined,
                         emailcontatoemergencia: emailEmergencia || undefined,
                         telefoneemergencia: telefoneEmergencia || undefined
@@ -90,6 +93,7 @@ export async function update(body){
         return userUpdate
         
     } catch (error) {
+        console.log(error)
         throw new Error ("Internal server error" + error)
     }
 }
