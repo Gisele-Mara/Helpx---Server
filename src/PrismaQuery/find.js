@@ -22,7 +22,7 @@ export async function findUser(body){
             tratamento: true 
         }
     })
-    // console.log("user prisma", user)
+    console.log("user prisma email", user)
     
     return user
 }
@@ -52,7 +52,7 @@ export async function findUserById(body){
             tratamento: true 
         }
     })
-    console.log("user prisma", user)
+    console.log("user prisma id", user)
     
     return user
 }

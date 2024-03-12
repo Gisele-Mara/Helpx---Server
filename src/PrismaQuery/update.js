@@ -1,4 +1,4 @@
-import { PrismaClient} from "@prisma/client";
+import {Prisma, PrismaClient} from "@prisma/client";
 
 
 const prisma = new PrismaClient()
@@ -24,6 +24,7 @@ export async function update(id, body){
             senha,
             doadorOrgao,
         } = body
+      
     
         const userUpdate = await prisma.usuario.update({
             where: {
@@ -66,7 +67,9 @@ export async function update(id, body){
                 },
                 alergia: {
                         connectOrCreate: {
+                        
                             where: {
+
                                 alergias: alergia 
                             },
                             create: {

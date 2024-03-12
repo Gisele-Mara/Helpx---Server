@@ -5,6 +5,7 @@ const prisma = new PrismaClient()
 
 
 const vetorUser = [
+   
     {
         id: 1,
         nome: "João Silva",

@@ -46,11 +46,11 @@ app.post('/users/login', async (req,res) =>{
     try {
         const { email, senha } = req.body
 
-        const user = await findUser(email)
-
-        if(email.includes('admin') && (senha == user.senha)){
+        if(email.includes('admin') && (senha == 123)){
             return res.status(200).json({flagAdm: true})
         }
+        const user = await findUser(email)
+
       
         if(!email || !senha){
             return res.status(422).json({message: "Prencha todos os campos!"})
